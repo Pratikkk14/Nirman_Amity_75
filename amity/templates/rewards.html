@@ -1,0 +1,132 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Rewards</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Calculate Your Rewards</h1>
+        <form action="/rewards" method="POST">
+            <label for="bio-waste">Biodegradable Waste (kg):</label>
+            <input type="number" name="bio_waste" id="bio-waste" required>
+
+            <label for="nonbio-waste">Non-Biodegradable Waste (kg):</label>
+            <input type="number" name="nonbio_waste" id="nonbio-waste" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    {% if reward_message %}
+    <div class="reward-display">
+        <h2>{{ reward_message }}</h2>
+        <a href="/tips">Get Tips</a> -->
+    <!-- </div>
+    {% endif %}
+
+    <div class="bottom-nav">
+        <a href="/home" class="nav-item">Home &#x2616;</a>
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+</body>
+</html> --> 
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rewards</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Your Rewards</h1>
+        <form method="POST" action="/rewards">
+            <label for="bio_waste">Biodegradable Waste (kg):</label>
+            <input type="number" id="bio_waste" name="bio_waste" required>
+            
+            <label for="non_bio_waste">Non-Biodegradable Waste (kg):</label>
+            <input type="number" id="non_bio_waste" name="non_bio_waste" required>
+            
+            <button type="submit">Submit</button>
+        </form>
+        
+
+        {% if user %}
+        <div class="rewards">
+        <p>Rewards Earned:☆ ★ ★</p>
+        <ul>
+            <li>Biodegradable Waste: {{ user.get('bio_waste', 0) }} kg</li>
+            <li>Non-Biodegradable Waste: {{ user.get('non_bio_waste', 0) }} kg</li>
+            <li>Total Stars: {{ (user.get('bio_waste', 0) + user.get('non_bio_waste', 0)) * 10 }}  &#x1F31F;</li>
+        </ul>
+
+        </div>
+
+        {% endif %}
+    </div>
+
+
+    <div class="bottom-nav">
+       
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+    <a href="/tips">View Tips</a>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rewards</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    
+
+    
+    <div class="rewards">
+    <!-- Input Form -->
+    <form action="/rewards" method="POST">
+        <label for="bio_waste">Biodegradable Waste (kg):</label>
+        <input type="number" id="bio_waste" name="bio_waste" required>
+
+        <label for="non_bio_waste">Non-Biodegradable Waste (kg):</label>
+        <input type="number" id="non_bio_waste" name="non_bio_waste" required>
+
+        <button type="submit">Submit</button>
+    </form>
+   
+
+    <!-- Waste Breakdown -->
+    <p>Biodegradable Waste: {{ bio_waste }} kg</p>
+    <p>Non-Biodegradable Waste: {{ non_bio_waste }} kg</p>
+
+    <!-- Reward Message -->
+    <h1>Your Rewards</h1>
+    <p>{{ reward_message }}</p>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="bottom-nav">
+        
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+</body>
+</html>

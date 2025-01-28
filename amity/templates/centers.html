@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearby Centers</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Nearby Waste Pickup Centers</h1>
+    <div id="centers"></div>
+
+    <script>
+        // Check if geolocation is available in the user's browser
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              // Extract latitude and longitude
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+      
+              // Send the location data to the backend
+              fetch("/centers", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ latitude, longitude }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log("Nearby centers:", data);
+                  // Populate the screen with the received data
+                  const centersContainer = document.getElementById("centers");
+                  centersContainer.innerHTML = data
+                    .map(
+                      (center) => `
+                    <div class="center">
+                      <h3>${center.name}</h3>
+                      <p>Type: ${center.type}</p>
+                      <p>Location: ${center.location}</p>
+                      <p>Contact: ${center.contact}</p>
+                    </div>
+                  `
+                    )
+                    .join("");
+                })
+                .catch((error) => console.error("Error fetching centers:", error));
+            },
+            (error) => {
+              console.error("Geolocation error:", error.message);
+              alert(
+                "We couldn't access your location. Please allow location access or enter it manually."
+              );
+            }
+          );
+        } else {
+          alert("Geolocation is not supported by your browser.");
+        }
+      </script>
+      
+</body>
+</html>

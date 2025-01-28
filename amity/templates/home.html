@@ -1,0 +1,50 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="home-container">
+        <h2>Welcome, {{ user['name'] }}!</h2>
+        <p>Your location: {{ user['location'] }}</p>
+        <p>Email: {{ user['email'] }}</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+   
+</head>
+<body>
+    <h1>Welcome, {{ user['name'] }}!</h1>
+    <p>Email: {{ user['email'] }}</p>
+    <p>Location: {{ user['location'] }}</p>
+    <a href="/logout" class="logout">Logout</a>
+
+    <div class="video-search-container">
+        <form action="https://www.youtube.com/results" method="GET" target="_blank">
+            <input type="text" name="search_query" placeholder="Search videos..." required>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+    
+    <div class="bottom-nav">
+        
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+    
+</body>
+</html>

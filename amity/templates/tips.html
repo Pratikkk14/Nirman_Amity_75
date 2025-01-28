@@ -1,0 +1,61 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Tips</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="tips-display">
+        <h1>Waste Management Tips</h1>
+        {% if tips %}
+        <ul>
+            {% for tip in tips %}
+            <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No data available. Please input your waste data on the <a href="/rewards">Rewards</a> page first.</p>
+        {% endif %}
+    </div>
+
+    <div class="bottom-nav">
+        <a href="/home" class="nav-item">Home &#x2616;</a>
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tips</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="tips-container">
+        <h1>Tips for Waste Management</h1>
+        <p>{{ message }}</p>
+        <ul>
+            {% for tip in tips %}
+            <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- <a href="/rewards">Back to Rewards</a> -->
+
+
+    <div class="bottom-nav">
+        
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+</body>
+</html>
