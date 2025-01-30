@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Classification</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Initial choice section */
+        .choice-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .choice-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .choice-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Rest of your existing styles */
+        .upload-section {
+            display: none;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .webcam-section {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .webcam-container {
+            position: relative;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        #webcam {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .webcam-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .webcam-btn.capture {
+            background-color: #e74c3c;
+        }
+
+        /* Your other existing styles remain the same */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Waste Classification</h1>
+        
+        <!-- Initial choice section -->
+        <div class="choice-section" id="choiceSection">
+            <h2>How would you like to capture the image?</h2>
+            <button class="choice-btn" onclick="showWebcam()">Use Webcam</button>
+            <button class="choice-btn" onclick="showUpload()">Upload Image</button>
+        </div>
+
+        <!-- Upload section -->
+        <div class="upload-section" id="uploadSection">
+            <input type="file" id="uploadInput" accept="image/*">
+            <p>Drag and drop an image here or</p>
+            <!-- <button class="upload-btn">Choose File</button> -->
+            <button class="choice-btn" onclick="showChoices()">Back to Options</button>
+        </div>
+
+        <!-- Webcam section -->
+        <div class="webcam-section" id="webcamSection">
+            <div class="webcam-container">
+                <video id="webcam" autoplay playsinline></video>
+            </div>
+            <div class="webcam-controls">
+                <button class="webcam-btn capture" id="captureBtn">Capture Photo</button>
+                <button class="webcam-btn" id="retakeBtn">Retake</button>
+                <button class="choice-btn" onclick="showChoices()">Back to Options</button>
+            </div>
+        </div>
+
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="imagePreview" alt="Preview" style="display: none; max-width: 100%; margin: 20px 0;">
+
+        <div class="loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Analyzing image...</p>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="prediction" id="topPrediction"></div>
+            <h3>All Probabilities:</h3>
+            <div class="probabilities" id="allProbabilities"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get all necessary elements
+        const choiceSection = document.getElementById('choiceSection');
+        const uploadSection = document.getElementById('uploadSection');
+        const webcamSection = document.getElementById('webcamSection');
+        const webcamVideo = document.getElementById('webcam');
+        const uploadInput = document.getElementById('uploadInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const resultSection = document.getElementById('resultSection');
+        const loadingSection = document.querySelector('.loading');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        let stream = null;
+
+        // Show choices section
+        function showChoices() {
+            stopWebcam();
+            choiceSection.style.display = 'block';
+            uploadSection.style.display = 'none';
+            webcamSection.style.display = 'none';
+            imagePreview.style.display = 'none';
+            resultSection.style.display = 'none';
+        }
+
+        // Show upload section
+        function showUpload() {
+            choiceSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+            webcamSection.style.display = 'none';
+        }
+
+        // Show webcam section
+        async function showWebcam() {
+            choiceSection.style.display = 'none';
+            uploadSection.style.display = 'none';
+            webcamSection.style.display = 'block';
+            
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                });
+                webcamVideo.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing webcam:', err);
+                alert('Could not access webcam. Please make sure you have granted camera permissions.');
+                showChoices();
+            }
+        }
+
+        // Stop webcam stream
+        function stopWebcam() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        }
+
+        // Handle file upload
+        uploadInput.addEventListener('change', handleFileSelect);
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                uploadInput.files = files;
+                handleFileSelect({ target: uploadInput });
+            }
+        });
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                processImage(file);
+            }
+        }
+
+        // Capture photo from webcam
+        captureBtn.addEventListener('click', () => {
+            canvas.width = webcamVideo.videoWidth;
+            canvas.height = webcamVideo.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+            
+            canvas.toBlob(blob => {
+                const file = new File([blob], "webcam-capture.jpg", { type: "image/jpeg" });
+                stopWebcam();
+                webcamSection.style.display = 'none';
+                processImage(file);
+            }, 'image/jpeg', 0.8);
+        });
+
+        // Process image (both uploaded and captured)
+        function processImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+
+            loadingSection.style.display = 'block';
+            resultSection.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingSection.style.display = 'none';
+                resultSection.style.display = 'block';
+
+                document.getElementById('topPrediction').textContent = 
+                    `Predicted Class: ${data.class} (${(data.probability * 100).toFixed(2)}%)`;
+
+                const probabilities = document.getElementById('allProbabilities');
+                probabilities.innerHTML = '';
+                Object.entries(data.probabilities)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([className, prob]) => {
+                        const probItem = document.createElement('div');
+                        probItem.className = 'probability-item';
+                        probItem.innerHTML = `
+                            <span>${className}</span>
+                            <span>${(prob * 100).toFixed(2)}%</span>
+                        `;
+                        probabilities.appendChild(probItem);
+                    });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loadingSection.style.display = 'none';
+                alert('Error analyzing image. Please try again.');
+            });
+        }
+
+        // Retake photo
+        retakeBtn.addEventListener('click', showWebcam);
+    </script>
+</body>
+</html>
