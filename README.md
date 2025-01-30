@@ -24,3 +24,7 @@ app.py -> flask app to run this code for predicting the img
 
 
 home.html -> html file containing the html code for this ml model
+
+
+to get the flutter link prototype this is the link :
+https://app.flutterflow.io/share/ecosort-rgsyjk
