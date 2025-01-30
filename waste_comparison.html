@@ -1,0 +1,26 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Comparison</title>
+</head>
+<body>
+    <h2>Users with Less Non-Biodegradable Waste</h2>
+    <img src="data:image/png;base64,{{ plot_url }}" alt="Waste Comparison Chart">
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Comparison</title>
+</head>
+<body>
+    <h2>Non-Biodegradable Waste Comparison</h2>
+    <img src="{{ url_for('waste_comparison') }}" alt="Waste Comparison Graph">
+</body>
+</html>

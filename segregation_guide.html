@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segregation Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-image: url('/static/waste.png');
+        }
+        .container {
+            width: 350px;
+            height:500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .response {
+            background: #e9ecef;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .bottom-nav {
+    background: #333;
+    padding: 12px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item {
+    color: white;
+    padding: 12px 18px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Segregation Guide</h1>
+        <form method="POST">
+            <input type="text" name="item" placeholder="Enter the item name..." required>
+            <button type="submit">Check</button>
+        </form>
+
+        {% if response %}
+        <div class="response">
+            <p>{{ response }}</p>
+        </div>
+        {% endif %}
+    </div>
+    <div class="bottom-nav">
+        
+        <a href="/centers" class="nav-item">Centers</a>
+        <a href="/rewards" class="nav-item">Rewards</a>
+        <a href="/tips" class="nav-item">Tips</a>
+        <a href="/segregation-guide" class="nav-item">Segregation Guide</a>
+        <a href="/events" class="nav-item">Events</a>
+    </div>
+</body>
+</html>
